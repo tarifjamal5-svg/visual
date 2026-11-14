@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Аватар канала</title>
+<style>html, body { margin: 0; background: #000; } #a { width: 1080px; height: 1080px; }</style></head>
+<body>
+<div id="defs"></div>
+<div id="a"></div>
+<script src="../art/art.js"></script>
+<script>
+  const A = ART;
+  document.getElementById('defs').innerHTML = A.defs();
+  const c = document.createElement('canvas'); c.width = 540; c.height = 540;
+  const g = c.getContext('2d'), im = g.createImageData(540, 540);
+  for (let i = 0; i < im.data.length; i += 4) { const v = 128 + (Math.random() + Math.random() + Math.random() - 1.5) * 120; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0);
+  // безликая голова и плечи на фоне ночной камеры; всё важное внутри круга
+  const head = 'M 540 250 Q 660 252 676 400 Q 684 470 656 512 Q 820 548 860 690 L 900 1100 L 180 1100 L 220 690 Q 260 548 424 512 Q 396 470 404 400 Q 420 252 540 250 Z';
+  document.getElementById('a').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" style="display:block">
+    <defs><radialGradient id="ir0" cx="50%" cy="42%" r="70%"><stop offset="0" stop-color="#b9c9b4"/><stop offset=".55" stop-color="#6f8270"/><stop offset="1" stop-color="#1e261f"/></radialGradient></defs>
+    <rect width="1080" height="1080" fill="url(#ir0)"/>
+    <rect width="1080" height="1080" fill="url(#scan)" opacity=".8"/>
+    <path d="${head}" fill="none" stroke="#000" stroke-width="30" stroke-opacity=".25"/>
+    <path d="${head}" fill="#030504"/>
+    <path d="M 430 330 Q 470 268 540 262" stroke="#9fb3a0" stroke-width="7" fill="none" opacity=".35" stroke-linecap="round"/>
+    <circle cx="790" cy="300" r="34" fill="#ff2a1a"/><circle cx="790" cy="300" r="70" fill="url(#glowRed)"/>
+    <image href="${c.toDataURL('image/png')}" width="1080" height="1080" preserveAspectRatio="none" opacity=".35" style="mix-blend-mode:overlay"/>
+    <rect width="1080" height="1080" fill="url(#vign)" opacity=".7"/>
+  </svg>`;
+  window.ready = Promise.resolve(true);
+</script>
+</body>
+</html>
