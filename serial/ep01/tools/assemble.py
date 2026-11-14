@@ -47,7 +47,7 @@ class Track:
         return np.concatenate(self.buf)
 
 
-def compressed(x, sil, a, b, max_gap=0.5, keep_long=()):
+def compressed(x, sil, a, b, max_gap=0.34, keep_long=()):
     """Возвращает куски [a,b] источника с ужатыми паузами: [(src_a, src_b)]"""
     segs, cur = [], a
     for s, e in sil:
@@ -89,7 +89,7 @@ def main():
 
     tr = Track()
     edl = []  # (src_a, src_b, out_a)
-    COLD = 1.25
+    COLD = 1.1
     tr.silence(COLD)
 
     def put_part(segs):
@@ -99,25 +99,28 @@ def main():
 
     def trim(x):
         i = np.where(np.abs(x) > 0.01)[0]
-        return x[max(0, i[0] - 800):i[-1] + 2000] if len(i) else x
+        if not len(i):
+            return x, 0.0
+        a = max(0, i[0] - 800)
+        return x[a:i[-1] + 2000], a / SR
 
     extra = {}
     put_part(parts[0])
-    tr.silence(0.2)
-    sonya = trim(load(os.path.join(A, 'sonya.mp3')))
-    extra['s'] = (tr.t, os.path.join(A, 'sonya_words.json'), len(sonya) / SR)
+    tr.silence(0.15)
+    sonya, lead = trim(load(os.path.join(A, 'sonya.mp3')))
+    extra['s'] = (tr.t - lead, os.path.join(A, 'sonya_words.json'), len(sonya) / SR)
     tr.clip(sonya)
-    tr.silence(0.3)
+    tr.silence(0.25)
     put_part(parts[1])
-    tr.silence(0.55)
+    tr.silence(0.6)
     lpath = os.path.join(A, 'landlady.mp3')
-    land = trim(load(lpath))
-    extra['l'] = (tr.t, os.path.join(A, 'landlady_words.json'), len(land) / SR)
+    land, lead = trim(load(lpath))
+    extra['l'] = (tr.t - lead, os.path.join(A, 'landlady_words.json'), len(land) / SR)
     tr.clip(land)
-    tr.silence(0.35)
+    tr.silence(0.3)
     put_part(parts[2])
     voice_end = tr.t
-    tr.silence(3.0)
+    tr.silence(2.6)
     out = tr.out()
     save(os.path.join(A, 'voice.wav'), out)
 
