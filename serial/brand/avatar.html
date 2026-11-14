@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Аватар канала</title>
+<style>html, body { margin: 0; background: #000; } .a { width: 1080px; height: 1080px; }</style></head>
+<body>
+<div class="a" id="tv"></div>
+<div class="a" id="moon"></div>
+<script>
+  function stars(seed, n) {
+    let s = seed, out = '';
+    const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    for (let i = 0; i < n; i++) {
+      const x = r() * 1080, y = r() * 1080, rr = 2 + r() * 4;
+      out += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${rr.toFixed(1)}" fill="#dfe6ff" opacity="${(0.25 + r() * 0.5).toFixed(2)}"/>`;
+    }
+    return out;
+  }
+  const grainDefs = `<filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 .5"/></filter>
+    <radialGradient id="sky" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#1a2a52"/><stop offset=".6" stop-color="#0d1530"/><stop offset="1" stop-color="#05070f"/></radialGradient>
+    <radialGradient id="eyeGlow"><stop offset="0" stop-color="#fffbe6" stop-opacity=".9"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="scr" cx="50%" cy="45%" r="65%"><stop offset="0" stop-color="#14203a"/><stop offset="1" stop-color="#03050a"/></radialGradient>
+    <pattern id="scanA" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="3" fill="#000" opacity=".35"/></pattern>`;
+
+  // Вариант 1: старый телевизор ночью, из тёмного экрана смотрят глаза
+  document.getElementById('tv').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+    <defs>${grainDefs}</defs>
+    <rect width="1080" height="1080" fill="url(#sky)"/>
+    ${stars(7, 40)}
+    <path d="M 470 330 L 360 170 M 610 330 L 740 150" stroke="#8a8f9c" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="360" cy="170" r="18" fill="#c7ccd6"/><circle cx="740" cy="150" r="18" fill="#c7ccd6"/>
+    <rect x="300" y="760" width="40" height="80" rx="8" fill="#5a2a1c"/><rect x="740" y="760" width="40" height="80" rx="8" fill="#5a2a1c"/>
+    <rect x="210" y="320" width="660" height="470" rx="70" fill="#b9553a"/>
+    <rect x="210" y="320" width="660" height="470" rx="70" fill="none" stroke="#7d3322" stroke-width="10"/>
+    <path d="M 640 320 L 800 320 Q 870 320 870 390 L 870 720 Q 870 790 800 790 L 680 790 Q 720 560 640 320 Z" fill="#9a4430"/>
+    <rect x="250" y="360" width="470" height="390" rx="56" fill="#3a1a12"/>
+    <rect x="268" y="378" width="434" height="354" rx="46" fill="url(#scr)"/>
+    <ellipse cx="400" cy="545" rx="90" ry="70" fill="url(#eyeGlow)"/><ellipse cx="570" cy="545" rx="90" ry="70" fill="url(#eyeGlow)"/>
+    <path d="M 352 548 Q 400 506 448 540 Q 400 566 352 548 Z" fill="#fffbe6"/>
+    <path d="M 522 540 Q 570 506 618 548 Q 570 566 522 540 Z" fill="#fffbe6"/>
+    <rect x="268" y="378" width="434" height="354" rx="46" fill="url(#scanA)"/>
+    <path d="M 300 410 Q 330 395 380 392" stroke="#ffffff" stroke-width="10" opacity=".12" stroke-linecap="round" fill="none"/>
+    <circle cx="790" cy="450" r="34" fill="#3a1a12"/><circle cx="790" cy="450" r="22" fill="#e3b45c"/><rect x="786" y="430" width="8" height="22" rx="3" fill="#3a1a12"/>
+    <circle cx="790" cy="560" r="28" fill="#3a1a12"/><circle cx="790" cy="560" r="17" fill="#c9a074"/>
+    <path d="M 760 640 h 60 M 760 665 h 60 M 760 690 h 60" stroke="#7d3322" stroke-width="8" stroke-linecap="round"/>
+    <rect width="1080" height="1080" filter="url(#gr)" opacity=".35" style="mix-blend-mode:overlay"/>
+  </svg>`;
+
+  // Вариант 2: луна-ночник с одним приоткрытым глазом
+  document.getElementById('moon').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+    <defs>${grainDefs}<radialGradient id="mg"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".45"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient></defs>
+    <rect width="1080" height="1080" fill="url(#sky)"/>
+    ${stars(11, 45)}
+    <circle cx="540" cy="500" r="440" fill="url(#mg)"/>
+    <circle cx="540" cy="500" r="300" fill="#f2d48c"/>
+    <path d="M 760 300 A 300 300 0 0 1 540 800 A 330 330 0 0 0 760 300 Z" fill="#d9b66a"/>
+    <circle cx="410" cy="360" r="34" fill="#e3c27a"/><circle cx="660" cy="640" r="26" fill="#e3c27a"/><circle cx="380" cy="660" r="20" fill="#e3c27a"/>
+    <path d="M 395 470 Q 445 500 495 470" stroke="#2a1d10" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M 585 466 Q 640 430 695 466" stroke="#2a1d10" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M 592 470 Q 640 510 688 470 Q 640 484 592 470 Z" fill="#fffbe6"/>
+    <circle cx="640" cy="481" r="13" fill="#c21d12"/>
+    <path d="M 450 600 Q 540 650 630 600" stroke="#2a1d10" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M 470 604 l -4 28 M 500 618 l -2 28 M 530 624 l 0 28 M 560 621 l 2 28 M 590 612 l 4 28" stroke="#2a1d10" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 120 900 Q 160 790 280 810 Q 330 720 450 770 Q 520 700 620 760 Q 720 720 780 800 Q 900 780 980 900 L 1100 1100 L -20 1100 L 60 900 Z" fill="#0b1226"/>
+    <path d="M 120 900 Q 160 790 280 810 Q 330 720 450 770 Q 520 700 620 760 Q 720 720 780 800 Q 900 780 950 900" stroke="#24345e" stroke-width="10" fill="none"/>
+    <rect width="1080" height="1080" filter="url(#gr)" opacity=".35" style="mix-blend-mode:overlay"/>
+  </svg>`;
+  window.ready = Promise.resolve(true);
+</script>
+</body>
+</html>
