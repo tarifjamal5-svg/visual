@@ -38,6 +38,8 @@
   <filter id="b40" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter>
   <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="7" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 .55"/></filter>
   <filter id="ir" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".30 .52 .18 0 .06  .32 .56 .20 0 .07  .28 .48 .16 0 .05  0 0 0 1 0"/><feComponentTransfer><feFuncR type="gamma" exponent=".62" amplitude="1.25"/><feFuncG type="gamma" exponent=".62" amplitude="1.32"/><feFuncB type="gamma" exponent=".62" amplitude="1.22"/></feComponentTransfer></filter>
+  <filter id="subShadow" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000" flood-opacity=".7"/></filter>
+  <filter id="redOnly" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/></filter>
   <pattern id="scan" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="3" fill="#000" opacity=".28"/></pattern>
   <pattern id="wallpaper" width="96" height="128" patternUnits="userSpaceOnUse"><path d="M48 14 q14 20 0 40 q-14 -20 0 -40z M0 78 q14 20 0 40 M96 78 q-14 20 0 40" fill="#fff" opacity=".04"/><rect x="0" width="2" height="128" fill="#fff" opacity=".025"/></pattern>
   <pattern id="quilt" width="70" height="70" patternUnits="userSpaceOnUse"><path d="M0 0 L70 70 M70 0 L0 70" stroke="#24150f" stroke-width="3"/><circle cx="0" cy="0" r="5" fill="#9a7a45"/><circle cx="70" cy="0" r="5" fill="#9a7a45"/><circle cx="0" cy="70" r="5" fill="#9a7a45"/><circle cx="70" cy="70" r="5" fill="#9a7a45"/><circle cx="35" cy="35" r="5" fill="#9a7a45"/></pattern>
@@ -53,7 +55,7 @@
 
   function nikitaHead(o = {}) {
     const s = NK, bl = o.blink || 0, ry = Math.max(0.7, 5.2 * (1 - bl));
-    const eyeL = o.eyesWide ? 7.5 : 6.5;
+    const eyeL = o.eyesWide ? 7.5 : 6.5, lx = (o.lookX || 0) * 3.5, ly = (o.lookY || 0) * 2.5;
     return `<g>
   <ellipse cx="-54" cy="2" rx="9" ry="16" fill="${s.skinSh}"/><ellipse cx="54" cy="2" rx="9" ry="16" fill="${s.skinSh}"/>
   <path d="M -50 -30 Q -52 -72 0 -74 Q 52 -72 50 -30 L 48 20 Q 44 66 0 70 Q -44 66 -48 20 Z" fill="${s.skin}"/>
@@ -63,8 +65,8 @@
   <path d="M 26 -80 Q 62 -70 56 6 L 50 6 Q 52 -34 40 -50 Z" fill="${s.hairSh}" opacity=".7"/>
   <path d="M -36 -20 L -10 -13 M 14 -13 L 40 -20" stroke="${s.brow}" stroke-width="7" stroke-linecap="round"/>
   <path d="M -33 9 Q -22 17 -11 9 M 15 9 Q 26 17 37 9" stroke="#6e5258" stroke-width="3" fill="none" opacity=".7"/>
-  <ellipse cx="-22" cy="0" rx="${eyeL}" ry="${ry}" fill="${s.eye}"/><ellipse cx="26" cy="0" rx="${eyeL}" ry="${ry}" fill="${s.eye}"/>
-  ${bl < 0.5 ? `<circle cx="-20" cy="-2" r="1.8" fill="#fff" opacity=".9"/><circle cx="28" cy="-2" r="1.8" fill="#fff" opacity=".9"/>` : ''}
+  <ellipse cx="${-22 + lx}" cy="${ly}" rx="${eyeL}" ry="${ry}" fill="${s.eye}"/><ellipse cx="${26 + lx}" cy="${ly}" rx="${eyeL}" ry="${ry}" fill="${s.eye}"/>
+  ${bl < 0.5 ? `<circle cx="${-20 + lx}" cy="${ly - 2}" r="1.8" fill="#fff" opacity=".9"/><circle cx="${28 + lx}" cy="${ly - 2}" r="1.8" fill="#fff" opacity=".9"/>` : ''}
   <path d="M -32 -6 Q -22 -11 -12 -6 M 16 -6 Q 26 -11 36 -6" stroke="${s.skinSh}" stroke-width="3" fill="none"/>
   <path d="M 3 -6 Q 1 14 -4 28 Q 6 36 16 30 Q 12 26 10 20 Z" fill="${s.skinSh}"/>
   <path d="M -14 30 Q -20 42 -16 54 M 22 30 Q 28 42 26 54" stroke="${s.skinSh}" stroke-width="2" fill="none" opacity=".6"/>
@@ -191,7 +193,7 @@
   <ellipse cx="-24" cy="-256" rx="11" ry="${ry}" fill="#14161b"/><ellipse cx="24" cy="-256" rx="11" ry="${ry}" fill="#14161b"/>
   ${bl < 0.5 ? `<circle cx="-20" cy="-261" r="3.6" fill="#fff"/><circle cx="28" cy="-261" r="3.6" fill="#fff"/>` : ''}
   <path d="M -2 -240 Q 2 -234 6 -240" stroke="${skinSh}" stroke-width="3" fill="none"/>
-  <path d="M -7 -222 L 8 -222" stroke="#7a4a44" stroke-width="3" stroke-linecap="round"/>
+  ${o.mouthOpen ? `<ellipse cx="0" cy="-221" rx="${5 + o.mouthOpen * 2}" ry="${2 + o.mouthOpen * 5}" fill="#3a1d1a"/>` : `<path d="M -7 -222 L 8 -222" stroke="#7a4a44" stroke-width="3" stroke-linecap="round"/>`}
   <circle cx="-42" cy="-230" r="10" fill="#d98a86" opacity=".18"/><circle cx="42" cy="-230" r="10" fill="#d98a86" opacity=".18"/>
 </g>`;
   }
@@ -211,7 +213,8 @@
   <path d="M -4 -4 Q 0 -8 4 -4" stroke="#151518" stroke-width="4" fill="none"/>
   <path d="M -34 -10 L -18 -18 M 14 -10 L 30 -18" stroke="#fff" stroke-width="4" opacity=".75" stroke-linecap="round"/>
   <path d="M 0 6 Q -4 22 -2 28 Q 4 32 10 28" stroke="${skinSh}" stroke-width="3" fill="none"/>
-  <path d="M -16 46 L 16 46 M -16 46 Q -22 50 -24 58 M 16 46 Q 22 50 24 58" stroke="#6b4740" stroke-width="3" fill="none" stroke-linecap="round"/>
+  ${o.mouthOpen ? `<ellipse cx="0" cy="48" rx="${10 + o.mouthOpen * 3}" ry="${2 + o.mouthOpen * 6}" fill="#2a1512"/>` : `<path d="M -16 46 L 16 46" stroke="#6b4740" stroke-width="3" stroke-linecap="round"/>`}
+  <path d="M -16 46 Q -22 50 -24 58 M 16 46 Q 22 50 24 58" stroke="#6b4740" stroke-width="3" fill="none" stroke-linecap="round"/>
   <path d="M -40 30 Q -36 50 -26 58 M 40 30 Q 36 50 26 58" stroke="${skinSh}" stroke-width="2" fill="none" opacity=".6"/>
 </g>`;
   }
@@ -345,6 +348,7 @@
   <path d="M 380 300 L 480 300 L 522 392 L 338 392 Z" fill="#23272e"/>
   <path d="M 338 392 L 522 392" stroke="#5a5040" stroke-width="4"/>
   <ellipse cx="430" cy="398" rx="64" ry="22" fill="url(#glowLamp)" opacity="${fl}"/>
+  ${o.mid || ''}
   <path d="M -20 1170 L 1100 1170 L 1100 1920 L -20 1920 Z" fill="#211a16"/>
   <path d="M -20 1170 L 1100 1170" stroke="#3a2e26" stroke-width="6"/>
   <path d="M 0 1300 Q 500 1290 1080 1310 M 0 1520 Q 540 1500 1080 1530 M 0 1760 Q 520 1740 1080 1770" stroke="#17110e" stroke-width="3" fill="none" opacity=".8"/>
@@ -361,7 +365,7 @@
   function bgRoom(o = {}) {
     const t = o.t || 0, gap = o.gap == null ? 0.25 : o.gap, led = o.led !== false;
     const under = o.underDoor == null ? 1 : o.underDoor;
-    const clock = o.clock || '03:17';
+    const clock = o.clock || '03:17', dawn = o.dawn || 0, open = o.closetOpen || 0;
     const r = rng(5);
     let bars = '';
     for (let x = 744; x < 990; x += 42) bars += `<rect x="${x}" y="350" width="6" height="560" fill="#080c14"/>`;
@@ -374,6 +378,7 @@
   <!-- окно -->
   <rect x="700" y="330" width="310" height="600" fill="#1b2333"/>
   <rect x="720" y="350" width="270" height="560" fill="url(#winNight)"/>
+  <rect x="720" y="350" width="270" height="560" fill="#9aa7b8" opacity="${0.55 * dawn}"/>
   <circle cx="940" cy="420" r="170" fill="url(#glowLamp)" opacity=".32"/>
   ${rain(21, t, 26, { x0: 720, x1: 990, y0: 350, y1: 910, len: 30, speed: 500, op: 0.28 })}
   ${bars}<rect x="720" y="610" width="270" height="6" fill="#080c14"/>
@@ -383,16 +388,23 @@
   <path d="M 720 330 Q 712 600 730 930 M 760 330 Q 748 600 770 930" stroke="#121a30" stroke-width="5" fill="none"/>
   <path d="M 960 320 L 1040 320 L 1040 940 L 972 940 Q 990 620 960 320 Z" fill="#1a2340"/>
   <rect x="670" y="310" width="400" height="12" fill="#0d121e"/>
-  <path d="M 730 948 L 990 948 L 1120 1920 L 520 1920 Z" fill="#6a82b8" opacity=".07" filter="url(#b16)"/>
+  <path d="M 730 948 L 990 948 L 1120 1920 L 520 1920 Z" fill="${dawn > 0.5 ? '#b8c4d4' : '#6a82b8'}" opacity="${0.07 + 0.1 * dawn}" filter="url(#b16)"/>
   <!-- шкаф -->
   <rect x="10" y="342" width="342" height="32" fill="#1f1b22"/>
   <rect x="20" y="370" width="322" height="1170" fill="#17141a"/>
   <rect x="36" y="388" width="142" height="1136" fill="#1c181f"/>
+  ${open ? `<rect x="182" y="388" width="142" height="1136" fill="#050407"/>
+  <rect x="190" y="440" width="128" height="8" fill="#2a2630"/>
+  <path d="M 214 448 l 10 -20 l 10 20 Z M 254 448 l 10 -20 l 10 20 Z M 290 448 l 10 -20 l 10 20 Z" stroke="#3a3540" stroke-width="3" fill="none"/>
+  <path d="M 204 448 L 244 448 L 250 900 L 198 900 Z" fill="#1b1d24"/><path d="M 244 448 L 284 448 L 292 820 L 240 820 Z" fill="#23202a"/><path d="M 282 448 L 314 448 L 318 960 L 280 960 Z" fill="#181a20"/>
+  <path d="M 324 388 L ${324 + 90 * open} ${380 - 20 * open} L ${324 + 90 * open} ${1532 + 20 * open} L 324 1524 Z" fill="#1d1920"/>` : `
   <rect x="${182 + gap * 34}" y="388" width="${142 - gap * 34}" height="1136" fill="#1d1920"/>
   <rect x="178" y="388" width="${4 + gap * 34}" height="1136" fill="url(#slit)"/>
+  ${o.eyeGlint ? `<ellipse cx="${182 + gap * 17}" cy="700" rx="${3 + gap * 4}" ry="2.5" fill="#d8dde2" opacity="${o.eyeGlint}"/>` : ''}`}
   <rect x="56" y="420" width="102" height="460" fill="none" stroke="#120f14" stroke-width="5"/><rect x="56" y="950" width="102" height="540" fill="none" stroke="#120f14" stroke-width="5"/>
-  <rect x="${202 + gap * 34}" y="420" width="${102 - gap * 30}" height="460" fill="none" stroke="#120f14" stroke-width="5"/><rect x="${202 + gap * 34}" y="950" width="${102 - gap * 30}" height="540" fill="none" stroke="#120f14" stroke-width="5"/>
-  <rect x="164" y="920" width="7" height="62" rx="3" fill="#57524c"/><rect x="${190 + gap * 34}" y="920" width="7" height="62" rx="3" fill="#57524c"/>
+  ${open ? '' : `<rect x="${202 + gap * 34}" y="420" width="${102 - gap * 30}" height="460" fill="none" stroke="#120f14" stroke-width="5"/><rect x="${202 + gap * 34}" y="950" width="${102 - gap * 30}" height="540" fill="none" stroke="#120f14" stroke-width="5"/>
+  <rect x="${190 + gap * 34}" y="920" width="7" height="62" rx="3" fill="#57524c"/>`}
+  <rect x="164" y="920" width="7" height="62" rx="3" fill="#57524c"/>
   <rect x="20" y="1536" width="322" height="26" fill="#0e0c10"/>
   <g transform="translate(286 344) scale(.9)">${petCam(led)}</g>
   <path d="M 322 350 Q 346 380 344 700" stroke="#0a0a0d" stroke-width="4" fill="none"/>
@@ -401,6 +413,7 @@
   <rect x="404" y="464" width="212" height="1046" fill="#04060b"/>
   <path d="M 404 1510 L 616 1510 L 584 1384 L 436 1384 Z" fill="#070a11"/>
   <rect x="446" y="700" width="128" height="684" fill="#0b0f18" stroke="#151b28" stroke-width="4"/>
+  ${o.doorOpen ? `<rect x="446" y="700" width="${128 * o.doorOpen}" height="684" fill="#000"/>${o.voidShape ? `<g transform="${tr(452 + 60 * o.doorOpen, 1384, 0.82)}" opacity="${o.voidShape}"><path d="M 0 -712 Q 54 -710 60 -640 Q 64 -598 50 -578 Q 120 -562 130 -500 L 150 -280 L 112 -440 L 104 -300 L 82 0 L -82 0 L -104 -300 L -112 -440 L -150 -280 L -130 -500 Q -120 -562 -50 -578 Q -64 -598 -60 -640 Q -54 -710 0 -712 Z" fill="#1a1f26"/></g>` : ''}<path d="M ${446 + 128 * o.doorOpen} 700 L ${446 + 128 * o.doorOpen + 26 * o.doorOpen} 690 L ${446 + 128 * o.doorOpen + 26 * o.doorOpen} 1394 L ${446 + 128 * o.doorOpen} 1384 Z" fill="#141a26"/>` : ''}
   <circle cx="510" cy="900" r="10" fill="url(#glowLamp)" opacity="${0.8 * under}"/><circle cx="510" cy="900" r="3.5" fill="#ffd27a" opacity="${0.9 * under}"/>
   <rect x="548" y="1030" width="14" height="40" rx="3" fill="#2a2f3a"/>
   <rect x="446" y="1378" width="128" height="5" fill="#ffc46a" opacity="${0.85 * under}"/>
@@ -419,7 +432,9 @@
   <path d="M 700 1560 Q 850 1520 1090 1560 M 650 1720 Q 860 1660 1090 1700" stroke="#1b2233" stroke-width="10" fill="none"/>
   <path d="M 740 1460 Q 900 1430 1090 1470" stroke="#323c56" stroke-width="6" fill="none"/>
   <rect x="604" y="1826" width="490" height="44" fill="#141720"/>
-  <rect y="0" width="1080" height="1920" fill="#0a1630" opacity=".22" style="mix-blend-mode:multiply"/>
+  ${o.mid || ''}
+  <rect y="0" width="1080" height="1920" fill="#0a1630" opacity="${0.22 * (1 - dawn * 0.6)}" style="mix-blend-mode:multiply"/>
+  ${dawn ? `<rect y="0" width="1080" height="1920" fill="#7d8ea6" opacity="${0.12 * dawn}" style="mix-blend-mode:screen"/>` : ''}
 </g>`;
   }
 
@@ -555,10 +570,14 @@
   <rect x="504" y="560" width="452" height="516" fill="#343d48"/>
   <path d="M 504 640 H 956 M 504 820 H 956" stroke="#2a323c" stroke-width="3"/>
   ${hisWins}
-  <rect x="680" y="770" width="104" height="128" fill="#4a5a72"/>
-  <rect x="694" y="836" width="76" height="30" rx="6" fill="#2c3547"/><ellipse cx="716" cy="832" rx="14" ry="8" fill="#6d7a92"/>
+  <rect x="680" y="770" width="104" height="128" fill="#8a7550"/>
+  <rect x="680" y="770" width="104" height="40" fill="#a68c5c"/>
+  <rect x="688" y="846" width="88" height="34" rx="5" fill="#3b4258"/><rect x="688" y="838" width="22" height="16" rx="4" fill="#d9d2c0"/>
+  <circle cx="702" cy="836" r="7" fill="#c39f88"/><circle cx="702" cy="832" r="7" fill="#8f949a" opacity=".9"/>
+  <path d="M 712 846 Q 740 836 776 846" stroke="#4b5470" stroke-width="5" fill="none"/>
+  <rect x="756" y="800" width="20" height="40" fill="#15121a"/><rect x="760" y="794" width="12" height="6" fill="#ff4a36"/>
   ${[686, 704, 722, 740, 758, 776].map(x => `<rect x="${x}" y="770" width="3" height="128" fill="#151a22"/>`).join('')}
-  <circle cx="732" cy="834" r="80" fill="#9fb0c8" opacity=".12" filter="url(#b16)"/>
+  <circle cx="732" cy="834" r="90" fill="#e8b65f" opacity=".14" filter="url(#b16)"/>
   ${rain(51, t, 30, { x0: 504, x1: 956, y0: 404, y1: 1076, len: 26, speed: 700, op: 0.2 })}
   <rect x="722" y="404" width="16" height="672" fill="#6a6d66"/><rect x="504" y="700" width="452" height="14" fill="#6a6d66"/>
   <rect x="466" y="1096" width="528" height="26" fill="#5c5f58"/>
@@ -600,7 +619,7 @@
   <path d="M 60 300 Q 120 420 90 560 M 900 1200 L 960 1260" stroke="#3e4441" stroke-width="3" fill="none"/>
   <rect x="190" y="250" width="700" height="1460" fill="#2a2420"/>
   <rect x="${600}" y="278" width="${gw}" height="1412" fill="url(#gapWarm)"/>
-  ${o.face !== false && open > 0.2 ? `<g clip-path="url(#gapClip)"><g transform="${tr(600 + gw * 0.62, 830, 1.5)}">${landladyHead()}</g></g>` : ''}
+  ${o.face !== false && open > 0.2 ? `<g clip-path="url(#gapClip)"><g transform="${tr(600 + gw * 0.62, 830, 1.5)}">${landladyHead({ mouthOpen: o.mouth || 0 })}</g></g>` : ''}
   <rect x="${600 + gw}" y="278" width="${260 - gw}" height="1412" fill="#1c1715"/>
   <rect x="214" y="278" width="386" height="1412" fill="#3b2620"/>
   <rect x="214" y="278" width="386" height="1412" fill="url(#quilt)" opacity=".9"/>
@@ -620,10 +639,10 @@
     const recOn = o.rec !== false;
     return `<g font-family="JetBrains Mono, monospace" font-weight="700">
   <rect width="1080" height="1920" fill="url(#scan)" opacity=".7"/>
-  <path d="M 60 140 v -60 h 60 M 1020 140 v -60 h -60 M 60 1780 v 60 h 60 M 1020 1780 v 60 h -60" stroke="#e6efe8" stroke-width="5" fill="none" opacity=".75"/>
-  <text x="90" y="200" font-size="44" fill="#e6efe8" opacity=".9">${o.label || 'CAM 1'}</text>
-  ${recOn ? `<circle cx="866" cy="186" r="14" fill="#ff3b2e"/>` : ''}<text x="890" y="200" font-size="44" fill="#e6efe8" opacity=".9">REC</text>
-  <text x="90" y="1760" font-size="48" fill="#e6efe8" opacity=".92">${o.time || 'СБ 05:02:13'}</text>
+  <path d="M 60 340 v -60 h 60 M 1020 340 v -60 h -60 M 60 1420 v 60 h 60 M 1020 1420 v 60 h -60" stroke="#e6efe8" stroke-width="5" fill="none" opacity=".75"/>
+  <text x="90" y="400" font-size="44" fill="#e6efe8" opacity=".9">${o.label || 'CAM 1'}</text>
+  ${recOn ? `<circle cx="866" cy="386" r="14" fill="#ff3b2e"/>` : ''}<text x="890" y="400" font-size="44" fill="#e6efe8" opacity=".9">REC</text>
+  <text x="90" y="1460" font-size="52" fill="#e6efe8" opacity=".95">${o.time || 'СБ 05:02:13'}</text>
 </g>`;
   }
 
@@ -637,6 +656,71 @@
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="${w}" height="${h}" style="display:block">${inner}${o.noOverlay ? '' : overlays(o)}</svg>`;
   }
 
+
+  // лежит в кровати (вид с камеры на шкафу)
+  function nikitaLying(o = {}) {
+    return `<g>
+  <path d="M 790 1420 Q 860 1380 960 1400 Q 1060 1420 1090 1460 L 1090 1700 Q 900 1640 720 1700 Q 700 1560 790 1420 Z" fill="#2f3850"/>
+  <path d="M 800 1440 Q 900 1420 1080 1470" stroke="#3a4560" stroke-width="8" fill="none"/>
+  <g transform="${tr(905, 1352, 0.62, -8)}">${nikitaHead({ blink: o.blink == null ? 1 : o.blink })}</g>
+  <path d="M 820 1418 Q 900 1396 1000 1414" stroke="#262e42" stroke-width="14" fill="none"/>
+</g>`;
+  }
+
+  // крупный план двери с номером и замком
+  function doorCloseup(o = {}) {
+    const num = o.num == null ? '17' : o.num, turn = o.turn || 0, keyIn = o.keyIn == null ? 1 : o.keyIn;
+    const padded = o.padded;
+    return `<g>
+  <rect width="1080" height="1920" fill="${padded ? '#3b2620' : '#26302c'}"/>
+  ${padded ? `<rect width="1080" height="1920" fill="url(#quilt)" opacity=".9"/>` : `<rect x="60" y="120" width="960" height="1680" fill="none" stroke="#1b2420" stroke-width="10"/><rect x="120" y="180" width="840" height="1560" fill="none" stroke="#202b26" stroke-width="6"/>`}
+  ${num === '' ? '' : `<g transform="translate(540 520)"><ellipse rx="150" ry="100" fill="#9a7a45"/><ellipse rx="138" ry="88" fill="none" stroke="#6e5530" stroke-width="5"/><text y="52" font-family="Inter, sans-serif" font-weight="900" font-size="150" fill="#3b2a14" text-anchor="middle">${num}</text></g>`}
+  <circle cx="540" cy="1000" r="16" fill="#0c0b0a"/><circle cx="540" cy="1000" r="7" fill="#e8b65f" opacity=".5"/>
+  <g transform="translate(540 1300)">
+    <rect x="-70" y="-150" width="140" height="300" rx="26" fill="#8f8a80"/><rect x="-58" y="-138" width="116" height="276" rx="20" fill="#a6a196"/>
+    <circle cx="0" cy="0" r="44" fill="#6d6a63"/><circle cx="0" cy="0" r="34" fill="#c2bdb1"/>
+    <g transform="rotate(${turn * 90})"><rect x="-6" y="-26" width="12" height="40" rx="3" fill="#2a2724"/><circle cx="0" cy="18" r="9" fill="#2a2724"/></g>
+    ${keyIn ? `<g transform="rotate(${turn * 90}) translate(0 ${(1 - keyIn) * 260})"><g transform="rotate(90) translate(-70 0) scale(2.3)">${keyShape(o.tag !== false)}</g></g>` : ''}
+  </g>
+  ${o.hand ? `<g transform="translate(${560 + (1 - keyIn) * 40} ${1300 + 330 + (1 - keyIn) * 260}) rotate(${turn * 40})"><ellipse rx="70" ry="95" fill="#c39f88"/><ellipse cx="40" cy="20" rx="30" ry="60" fill="#9d7b69"/><rect x="-80" y="80" width="160" height="300" rx="40" fill="#3a4231"/></g>` : ''}
+  <rect width="1080" height="1920" fill="#000" opacity=".25"/>
+</g>`;
+  }
+
+  // телефон с записью камеры
+  function phone(inner, o = {}) {
+    return `<g>
+  <rect width="1080" height="1920" fill="#0b0e14"/>
+  <circle cx="540" cy="900" r="700" fill="#1b2433" opacity=".6" filter="url(#b40)"/>
+  <g transform="translate(540 980) rotate(${o.rot || -3})">
+    <rect x="-330" y="-640" width="660" height="1280" rx="70" fill="#07080a"/>
+    <rect x="-300" y="-600" width="600" height="1200" rx="44" fill="#000"/>
+    <svg x="-300" y="-600" width="600" height="1200" viewBox="0 0 1080 2160" preserveAspectRatio="xMidYMid slice">${inner}</svg>
+    <rect x="-90" y="-616" width="180" height="26" rx="13" fill="#07080a"/>
+    <rect x="-300" y="420" width="600" height="180" fill="#000" opacity=".55"/>
+    <rect x="-250" y="470" width="500" height="10" rx="5" fill="#3a3f48"/><rect x="-250" y="470" width="${500 * (o.progress || 0)}" height="10" rx="5" fill="#ff3b2e"/>
+    <circle cx="${-250 + 500 * (o.progress || 0)}" cy="475" r="16" fill="#fff"/>
+    <text x="-250" y="540" font-family="JetBrains Mono, monospace" font-weight="700" font-size="34" fill="#e6efe8">${o.label || ''}</text>
+    <path d="M 175 -120 l 0 0" />
+  </g>
+  ${o.thumb ? `<g transform="translate(${610 + 0} ${1560}) rotate(-8)"><ellipse rx="90" ry="120" fill="#c39f88"/><ellipse cx="-30" cy="-10" rx="36" ry="70" fill="#9d7b69"/></g>` : ''}
+</g>`;
+  }
+
+  function keyFloorShot(o = {}) {
+    const t = o.t || 0;
+    let boards = '';
+    for (let y = -40; y < 1980; y += 150) boards += `<rect x="0" y="${y}" width="1080" height="146" fill="${(y / 150) % 2 ? '#211b17' : '#251e19'}"/><path d="M 0 ${y + 148} H 1080" stroke="#120e0b" stroke-width="5"/>`;
+    return `<g>
+  ${boards}
+  <path d="M 300 -100 L 1180 -100 L 1180 2000 L 600 2000 Z" fill="#c9d0d6" opacity=".07"/>
+  <ellipse cx="560" cy="1010" rx="260" ry="70" fill="#000" opacity=".45" filter="url(#b16)"/>
+  <g transform="translate(470 980) rotate(${-14 + Math.sin(t * 0.7) * 1.5}) scale(4.2)">${keyShape(true)}</g>
+  <rect x="0" y="0" width="210" height="1920" fill="#060507" opacity=".9"/><rect x="200" y="0" width="16" height="1920" fill="#17141a"/>
+</g>`;
+  }
+
+  root.ART_EXTRA = { nikitaLying, doorCloseup, phone, keyFloorShot };
   root.ART = { C, rng, tr, defs, nikita, nikitaHead, sonya, landlady, landladyHead, shadowMan, mug, petCam, keyShape, oldPhoto, polaroid, digitalClock, scalpel, rain,
     bgKitchen, bgRoom, bgYard, bgPodezd, bgEmpty, bgDoorChain, camHUD, overlays, frame };
 })(typeof window !== 'undefined' ? window : globalThis);

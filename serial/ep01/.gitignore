@@ -1,0 +1,8 @@
+audio/tmp/
+audio/voice.wav
+audio/mix.wav
+audio/landlady.mp3
+audio/landlady_words.json
+out/*.parts/
+out/test*
+out/video_noaudio.mp4
