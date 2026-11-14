@@ -7,3 +7,4 @@ out/*.parts/
 out/test*
 out/video_noaudio.mp4
 out/build.log
+out/*.mp4

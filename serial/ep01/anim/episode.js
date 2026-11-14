@@ -433,7 +433,7 @@
       <defs>${grain}</defs>
       ${body}
       <rect width="1080" height="1920" fill="url(#vign)"/>
-      ${root.GRAIN ? `<image href="${root.GRAIN[frameNo % root.GRAIN.length]}" x="0" y="0" width="1080" height="1920" preserveAspectRatio="none" opacity=".5" style="mix-blend-mode:overlay;image-rendering:pixelated"/>` : `<rect width="1080" height="1920" filter="url(#gr)" opacity=".42" style="mix-blend-mode:overlay"/>`}
+      ${root.GRAIN ? `<image href="${root.GRAIN[Math.floor(frameNo / 2) % root.GRAIN.length]}" x="0" y="0" width="1080" height="1920" preserveAspectRatio="none" opacity=".38" style="mix-blend-mode:overlay;image-rendering:pixelated"/>` : `<rect width="1080" height="1920" filter="url(#gr)" opacity=".42" style="mix-blend-mode:overlay"/>`}
       ${fade}
       ${title}${badge}
       ${subsSVG(chunks, t)}
