@@ -1,2 +1,25 @@
 duration 86.081 voice_end 83.481
 cues 28 duration 86.08
+{"voice_LUFS": -24.7, "drone_LUFS_after": -43.7, "drone_raw_LUFS": -16.2, "sfx_stem_LUFS": -33.8, "final_LUFS": -14.1}
+[part2.mp4] 0/860 0s
+[part1.mp4] 0/861 0s
+[part0.mp4] 0/861 0s
+[part2.mp4] 150/860 38s
+[part1.mp4] 150/861 55s
+[part0.mp4] 150/861 57s
+[part2.mp4] 300/860 80s
+[part1.mp4] 300/861 99s
+[part2.mp4] 450/860 124s
+[part0.mp4] 300/861 135s
+[part1.mp4] 450/861 142s
+[part2.mp4] 600/860 181s
+[part1.mp4] 600/861 184s
+[part0.mp4] 450/861 191s
+[part1.mp4] 750/861 230s
+[part0.mp4] 600/861 243s
+[part2.mp4] 750/860 244s
+[part0.mp4] 750/861 285s
+done /home/user/visual/serial/ep01/out/video_noaudio.mp4
+stream|codec_name=h264|width=1080|height=1920|r_frame_rate=30/1
+stream|codec_name=aac|r_frame_rate=0/0
+format|duration=86.066667
