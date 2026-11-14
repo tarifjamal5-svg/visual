@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Обложка: Нас двое</title>
+<style>html, body { margin: 0; background: #000; } .c { width: 1080px; height: 1920px; }</style>
+</head>
+<body>
+<div id="defs"></div>
+<div class="c" id="a"></div>
+<div class="c" id="b"></div>
+<script src="../art/art.js"></script>
+<script>
+  const A = ART, X = ART_EXTRA;
+  document.getElementById('defs').innerHTML = A.defs();
+  // ИК-запись: Никита спит, рядом сидит «он» (рисуется поверх фильтра чистым чёрным)
+  const z = 1.5, cx = 800, cy = 1920 - 960 / 1.5;
+  const camT = `translate(540 960) scale(${z}) translate(${-cx} ${-cy})`;
+  const room = A.bgRoom({ gap: 0, noCam: true, dawn: 0.1, mid: X.nikitaLying({}) });
+  const fig = `<g transform="translate(730 1665) scale(0.95)">${X.shadowSit({})}</g>`;
+  function noise() {
+    const c = document.createElement('canvas'); c.width = 540; c.height = 960;
+    const g = c.getContext('2d'), im = g.createImageData(540, 960);
+    for (let i = 0; i < im.data.length; i += 4) { const v = 128 + (Math.random() + Math.random() + Math.random() - 1.5) * 120; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+    g.putImageData(im, 0, 0); return c.toDataURL('image/png');
+  }
+  const grain = noise();
+  const base = (extra) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" style="display:block">
+    <g filter="url(#ir)"><g transform="${camT}">${room}</g></g>
+    <g transform="${camT}">${fig}</g>
+    ${A.camHUD({ time: ' ' })}
+    <rect width="1080" height="1920" fill="url(#vign)"/>
+    <image href="${grain}" width="1080" height="1920" preserveAspectRatio="none" opacity=".35" style="mix-blend-mode:overlay"/>
+    ${extra}
+  </svg>`;
+  const T = (x, y, size, fill, txt, sw = 22) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Inter" font-weight="900" font-size="${size}" fill="${fill}" stroke="#000" stroke-width="${sw}" stroke-linejoin="round" paint-order="stroke" filter="url(#subShadow)">${txt}</text>`;
+  const badge = `<g><rect x="70" y="250" width="250" height="64" rx="10" fill="#ff3b2e"/><text x="195" y="295" text-anchor="middle" font-family="Inter" font-weight="900" font-size="38" letter-spacing="4" fill="#fff">ЧАСТЬ 1</text></g>`;
+  // вариант A: красный «маркерный» круг вокруг силуэта
+  const circle = `<path d="M 300 820 C 380 690 610 680 690 820 C 770 960 730 1240 560 1300 C 400 1350 230 1230 222 1040 C 214 920 250 850 340 790" fill="none" stroke="#ff2a1a" stroke-width="16" stroke-linecap="round" filter="url(#subShadow)"/>`;
+  document.getElementById('a').innerHTML = base(badge + circle +
+    T(540, 600, 96, '#ffffff', 'Я ЖИВУ ОДИН') +
+    T(540, 1440, 180, '#ff3b2e', 'НАС', 26) + T(540, 1610, 180, '#ff3b2e', 'ДВОЕ', 26));
+  // вариант B: без круга, чище
+  document.getElementById('b').innerHTML = base(badge +
+    T(540, 600, 96, '#ffffff', 'Я ЖИВУ ОДИН') +
+    T(540, 1460, 104, '#ffffff', 'НО НА ЗАПИСИ') + T(540, 1615, 150, '#ff3b2e', 'НАС ДВОЕ', 26));
+  window.ready = document.fonts.load('900 92px Inter').then(() => true);
+</script>
+</body>
+</html>
