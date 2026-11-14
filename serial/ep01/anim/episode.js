@@ -149,7 +149,7 @@
       // раскладка в одну или две строки
       const FS = 92, maxW = 860;
       const widths = c.words.map(w => measure(w.txt, FS));
-      const space = measure(' ', FS) + 22;
+      const space = measure(' ', FS) + 42;
       const total = widths.reduce((a, b) => a + b, 0) + space * (c.words.length - 1);
       let lines = [c.words.map((w, k) => k)];
       if (total > maxW && c.words.length > 1) {
@@ -191,7 +191,7 @@
       const w = c.words[l.k];
       if (t < w.start - 0.03) return '';
       const age = t - w.start;
-      const pop = age < 0.14 ? 1 + 0.22 * (1 - age / 0.14) : 1;
+      const pop = age < 0.14 ? 1 + 0.14 * (1 - age / 0.14) : 1;
       const col = RED.includes(w.key) ? '#ff3b2e' : YEL.includes(w.key) ? '#f2c230' : (c.unit === 's' ? '#fff4c8' : c.unit === 'l' ? '#f1dbe7' : '#ffffff');
       return `<g transform="translate(${l.x.toFixed(1)} ${l.y}) scale(${pop.toFixed(3)})"><text x="0" y="0" text-anchor="middle" font-family="Inter" font-weight="900" font-size="${l.fs.toFixed(1)}" fill="${col}" stroke="#000" stroke-width="18" stroke-linejoin="round" paint-order="stroke">${w.txt}</text></g>`;
     }).join('');
@@ -384,7 +384,7 @@
             <text x="540" y="930" text-anchor="middle" font-family="Inter" font-weight="900" font-size="104" fill="#fff">${shown.split(' ').slice(0, 2).join(' ')}</text>
             <text x="540" y="1060" text-anchor="middle" font-family="Inter" font-weight="900" font-size="120" fill="#ff3b2e">${shown.split(' ').slice(2).join(' ')}${blinkC && n < txt.length ? '_' : ''}</text>
             <text x="540" y="1300" text-anchor="middle" font-family="JetBrains Mono" font-weight="700" font-size="44" letter-spacing="8" fill="#8792a0" opacity="${clamp((lt - 1.2) / 0.4)}">СЕРИЯ 2 · ПОДПИШИСЬ</text>
-            <circle cx="262" cy="1286" r="12" fill="#ff3b2e" opacity="${clamp((lt - 1.2) / 0.4) * (blinkC ? 1 : 0.2)}"/>`,
+            <circle cx="178" cy="1286" r="12" fill="#ff3b2e" opacity="${clamp((lt - 1.2) / 0.4) * (blinkC ? 1 : 0.2)}"/>`,
           cam: { x: 540, y: 960, z: 1 }, noGrainVign: false,
         };
       },
