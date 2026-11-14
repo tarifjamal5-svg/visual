@@ -69,7 +69,9 @@ def peaks(e, hop, t0, t1, min_gap=0.09, prom=2.5):
 
 def main():
     audio, units_path, out_path = sys.argv[1:4]
-    units = json.load(open(units_path, encoding='utf-8'))
+    raw_units = json.load(open(units_path, encoding='utf-8'))
+    units = [u['text'] if isinstance(u, dict) else u for u in raw_units]
+    pauses = [u.get('pause', 0) if isinstance(u, dict) else 0 for u in raw_units]
     x, sr = load(audio)
     total = len(x) / sr
     sil = silences(audio)
@@ -136,6 +138,11 @@ def main():
                 d = speech_between(a, b)
                 inner = sum(max(0.0, min(b, e_) - max(a, s_) - 0.22) for s_, e_ in sil if min(b, e_) > max(a, s_))
                 cost = dp[u - 1][j] + 0.6 * ((d - exp) / max(exp, 0.4)) ** 2 + bpen(cands[c]) + 6 * inner
+                pz = pauses[u - 1]
+                if pz and cands[c][2] != 'end':
+                    need = 0.45 if pz == 1 else 0.75
+                    L = cands[c][1] - cands[c][0]
+                    cost += 5 * max(0.0, need - L) / need
                 if cost < best:
                     best, arg = cost, j
             dp[u][c], bk[u][c] = best, arg
