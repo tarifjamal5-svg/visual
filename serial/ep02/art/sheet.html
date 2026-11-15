@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>ПРЕСЛЕДОВАТЕЛЬ - лист героев и фонов</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #07090e; color: #c9d0d6; font-family: Inter, sans-serif; }
+  .sheet { width: 1600px; padding: 48px 56px 56px; background: radial-gradient(ellipse at 50% 0%, #121a28 0%, #07090e 70%); }
+  h1 { font-family: 'Inter Display', Inter, sans-serif; font-weight: 900; font-size: 64px; letter-spacing: 6px; color: #e9edf0; }
+  h1 span { color: #d23b2e; }
+  .sub { font-size: 22px; color: #7f8b96; margin: 8px 0 28px; letter-spacing: 1px; }
+  .labels { display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; margin-top: -6px; }
+  .labels b { display: block; font-size: 28px; color: #eef1f3; font-weight: 800; }
+  .labels i { display: block; font-style: normal; font-size: 18px; color: #8792a0; margin-top: 4px; line-height: 1.35; }
+  .row2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; margin-top: 34px; }
+  .card { background: #0d121b; border: 1px solid #1c2533; border-radius: 18px; padding: 18px 20px 14px; }
+  .card h3 { font-size: 20px; font-weight: 800; color: #aeb8c2; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .props { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; font-size: 16px; color: #8792a0; }
+  .pal { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .pal div { width: 66px; text-align: center; font-size: 13px; color: #7f8b96; }
+  .pal div::before { content: ''; display: block; height: 46px; border-radius: 10px; background: var(--c); margin-bottom: 5px; border: 1px solid #ffffff14; }
+  .grid { display: grid; grid-template-columns: repeat(4, 360px); gap: 26px 28px; }
+  .loc { text-align: left; }
+  .loc .th { width: 360px; height: 640px; border-radius: 14px; overflow: hidden; border: 1px solid #1c2533; }
+  .loc b { display: block; font-size: 22px; color: #eef1f3; margin-top: 10px; font-weight: 800; }
+  .loc i { display: block; font-style: normal; font-size: 16px; color: #8792a0; margin-top: 3px; line-height: 1.35; }
+</style>
+</head>
+<body>
+<div id="defs"></div>
+
+<div class="sheet" id="chars">
+  <h1>ПРЕСЛЕДОВАТЕЛЬ<span>.</span></h1>
+  <div class="sub">Лист героев · серия 1 «Кто-то был дома» · плоский 2D, тёмная палитра, единственное яркое пятно - куртка Сони</div>
+  <div id="lineup"></div>
+  <div class="labels">
+    <div><b>Никита, 48</b><i>ветеринар, никому не верит.<br>Парка поверх хирургички</i></div>
+    <div><b>Никита со спины</b><i>для сцен у окна<br>и у двери</i></div>
+    <div><b>Соня, 8</b><i>сирота, весь день у подъезда.<br>Не спит по ночам</i></div>
+    <div><b>Хозяйка, ~80</b><i>очки-блики прячут глаза.<br>Связка ключей с биркой</i></div>
+    <div><b>Тень</b><i>её сын. Лица нет.<br>Никогда не показан целиком</i></div>
+  </div>
+  <div class="row2">
+    <div class="card"><h3>Позы</h3><div id="poses"></div></div>
+    <div class="card"><h3>Реквизит</h3><div id="props"></div>
+      <div class="props"><span>кружка с лапкой</span><span>ключ, бирка «17»</span><span>камера из клиники</span><span>часы 03:17</span></div>
+      <div class="pal">
+        <div style="--c:#0f1624">ночь</div><div style="--c:#38424f">подъезд</div><div style="--c:#3a4231">Никита</div><div style="--c:#e8b65f">лампа</div>
+        <div style="--c:#f2c230">Соня</div><div style="--c:#4b3342">хозяйка</div><div style="--c:#d23b2e">опасность</div><div style="--c:#020306">тень</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="locs">
+  <h1>ЛОКАЦИИ<span>.</span></h1>
+  <div class="sub">Кадр 9:16 · дождь, мигающий свет и зерно в каждой сцене · номера квартир 3 и 17 = 03:17</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script src="art.js"></script>
+<script>
+  const A = ART;
+  document.getElementById('defs').innerHTML = A.defs();
+
+  // ---- лайнап ----
+  const ground = 700;
+  const lineup = `<svg viewBox="0 0 1488 740" width="1488" height="740">
+    <ellipse cx="744" cy="${ground + 4}" rx="740" ry="26" fill="#000" opacity=".5"/>
+    <line x1="0" y1="${ground}" x2="1488" y2="${ground}" stroke="#1c2533" stroke-width="2"/>
+    <g transform="translate(150 ${ground}) scale(1.02)">${A.nikita({ pose: 'front' })}</g>
+    <g transform="translate(445 ${ground}) scale(1.02)">${A.nikita({ pose: 'back' })}</g>
+    <g transform="translate(745 ${ground}) scale(1.02)">${A.sonya({ chalk: true })}</g>
+    <g transform="translate(1040 ${ground}) scale(1.02)">${A.landlady()}</g>
+    <rect x="1215" y="20" width="240" height="${ground - 20}" rx="6" fill="#3a4a66" opacity=".55"/>
+    <rect x="1215" y="20" width="240" height="${ground - 20}" rx="6" fill="url(#glowCold)"/>
+    <g transform="translate(1335 ${ground}) scale(1.02)">${A.shadowMan()}</g>
+  </svg>`;
+  document.getElementById('lineup').innerHTML = lineup;
+
+  // ---- позы ----
+  document.getElementById('poses').innerHTML = `<svg viewBox="0 0 800 520" width="100%">
+    <rect x="20" y="320" width="520" height="40" rx="8" fill="#323c55"/><rect x="20" y="356" width="520" height="150" rx="6" fill="#262e42"/>
+    <g transform="translate(170 500) scale(.9)">${A.nikita({ pose: 'sit', scalpel: true, eyesWide: true })}</g>
+    <g transform="translate(415 500) scale(.9)">${A.nikita({ pose: 'sleep' })}</g>
+    <g transform="translate(650 500) scale(1.15)">${A.sonya({ point: true })}</g>
+    <text x="170" y="40" fill="#8792a0" font-size="18" text-anchor="middle" font-family="Inter">не спит, скальпель</text>
+    <text x="415" y="40" fill="#8792a0" font-size="18" text-anchor="middle" font-family="Inter">уснул под утро</text>
+    <text x="650" y="40" fill="#8792a0" font-size="18" text-anchor="middle" font-family="Inter">«там свет не горит»</text>
+  </svg>`;
+
+  // ---- реквизит ----
+  document.getElementById('props').innerHTML = `<svg viewBox="0 0 680 230" width="100%">
+    <g transform="translate(75 200) scale(.7)">${A.mug()}</g>
+    <g transform="translate(240 100) scale(1.45) rotate(-10)">${A.keyShape(true)}</g>
+    <g transform="translate(420 150) scale(1.7)">${A.petCam(true)}</g>
+    <g transform="translate(590 130) scale(1.3)">${A.digitalClock('03:17')}</g>
+  </svg>`;
+
+  // ---- локации ----
+  const locs = [
+    ['Кухня, пятница 21:40', 'кружка не на месте, мокрый круг, фото хозяйки с мальчиком, в проёме тень', A.bgKitchen({ lurker: 0.85 })],
+    ['Однушка, ночь', 'шкаф (под камерой, слепая зона), проём в прихожую, кровать, часы', A.bgRoom({ gap: 0.35 }) + `<g transform="translate(870 1905) scale(1.25)">${A.nikita({ pose: 'sit', scalpel: true, eyesWide: true })}</g>`],
+    ['Запись камеры, 05:02', 'ч/б, полосы, REC. Тень над спящим, а человека в кадре нет', `<g filter="url(#ir)">${A.bgRoom({ gap: 0.6, underDoor: 0.6 })}<g transform="translate(870 1905) scale(1.25)">${A.nikita({ pose: 'sleep' })}</g><g transform="translate(700 1900) scale(1.5,1.2) skewX(-14)" opacity=".85">${A.shadowMan()}</g></g>` + A.camHUD({ time: 'СБ 05:02:13' })],
+    ['Двор из окна', 'через решётку первого этажа: дом напротив, одно окно всегда тёмное', A.bgYard({ t: 0.3 })],
+    ['Подъезд, суббота 13:40', 'лавка, бабки, мел на асфальте, Соня. В дверях подъезда тень', A.bgPodezd({ lurker: 0.9, t: 0.2 }) + `<g transform="translate(830 1720) scale(1.25)">${A.sonya({ point: true })}</g>`],
+    ['Пустая квартира №17', 'стул у окна, окно Никиты как на ладони, стена фото, то же старое фото', A.bgEmpty({ t: 0.5 })],
+    ['Дверь хозяйки', 'дверь на цепочке, свет из щели, половина лица и блики очков', A.bgDoorChain({})],
+    ['Стиль-кадр', 'как будет выглядеть сцена с героем и субтитрами', A.bgPodezd({ lurker: 0.7, babushkas: true }) + `<g transform="translate(300 1990) scale(1.75)">${A.nikita({ pose: 'front' })}</g><g transform="translate(790 1900) scale(1.45)">${A.sonya({ point: true })}</g>` +
+      `<rect x="0" y="1540" width="1080" height="380" fill="#ff3b2e" opacity=".0"/><g font-family="Inter" font-weight="900" text-anchor="middle"><text x="500" y="1250" font-size="96" fill="#fff" stroke="#000" stroke-width="16" paint-order="stroke">В ПУСТУЮ</text><text x="500" y="1362" font-size="108" fill="#f2c230" stroke="#000" stroke-width="16" paint-order="stroke">КВАРТИРУ</text></g>`],
+  ];
+  document.getElementById('grid').innerHTML = locs.map(([t, d, svg]) =>
+    `<div class="loc"><div class="th">${A.frame(svg, { w: 360, h: 640 })}</div><b>${t}</b><i>${d}</i></div>`).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Обложка: Не открывай</title>
+<style>html, body { margin: 0; background: #000; } #c { width: 1080px; height: 1920px; }</style></head>
+<body>
+<div id="defs"></div>
+<div id="c"></div>
+<script src="../art/art.js"></script>
+<script src="../art/art2.js"></script>
+<script>
+  const A = ART, B = ART2;
+  document.getElementById('defs').innerHTML = A.defs();
+  const mom = `<g transform="translate(540 760) scale(1.1)">${B.momUpper({ kind: 'fake' })}</g>`;
+  const inner = `<g transform="translate(540 900) scale(1.55) translate(-540 -870)">${B.landing({ figure: mom })}</g>`;
+  // глазок чуть ниже центра, чтобы сверху и снизу поместились надписи внутри зоны 3:4
+  const peep = `<g transform="translate(0 110)">${B.peephole(inner, { zoom: 1.0 })}</g>`;
+  const T = (y, size, fill, txt, sw = 20) => `<text x="540" y="${y}" text-anchor="middle" font-family="Inter" font-weight="900" font-size="${size}" fill="${fill}" stroke="#000" stroke-width="${sw}" stroke-linejoin="round" paint-order="stroke" filter="url(#subShadow)">${txt}</text>`;
+  const c = document.createElement('canvas'); c.width = 540; c.height = 960;
+  const g = c.getContext('2d'), im = g.createImageData(540, 960);
+  for (let i = 0; i < im.data.length; i += 4) { const v = 128 + (Math.random() + Math.random() + Math.random() - 1.5) * 120; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0);
+  document.getElementById('c').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" style="display:block">
+    ${peep}
+    <image href="${c.toDataURL('image/png')}" width="1080" height="1920" preserveAspectRatio="none" opacity=".3" style="mix-blend-mode:overlay"/>
+    ${T(330, 58, '#7fc4ff', 'ГОЛОСОВОЕ ОТ МАМЫ:', 12)}
+    ${T(450, 112, '#ff3b2e', '«НЕ ОТКРЫВАЙ»', 22)}
+    ${T(1515, 96, '#ffffff', 'А ОНА', 20)}
+    ${T(1620, 96, '#ffffff', 'ЗА ДВЕРЬЮ', 20)}
+  </svg>`;
+  window.ready = document.fonts.load('900 92px Inter').then(() => true);
+</script>
+</body>
+</html>

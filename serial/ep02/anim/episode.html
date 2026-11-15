@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>ПРЕСЛЕДОВАТЕЛЬ 1</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+  #stage { width: 1080px; height: 1920px; }
+</style>
+</head>
+<body>
+<div id="defs"></div>
+<div id="stage"></div>
+<script src="../art/art.js"></script>
+<script src="../art/art2.js"></script>
+<script src="data.js"></script>
+<script src="episode.js"></script>
+<script>
+  document.getElementById('defs').innerHTML = ART.defs();
+  const cv = document.createElement('canvas').getContext('2d');
+  const measure = (txt, fs) => { cv.font = `900 ${fs}px Inter`; return cv.measureText(txt).width; };
+  let STATE = null;
+  window.ready = (async () => {
+    await document.fonts.load('900 92px Inter');
+    await document.fonts.load('700 52px "JetBrains Mono"');
+    // зерно: 8 заранее сгенерированных шумовых кадров вместо фильтра на каждый кадр
+    window.GRAIN = [];
+    for (let k = 0; k < 8; k++) {
+      const c = document.createElement('canvas'); c.width = 540; c.height = 960;
+      const g = c.getContext('2d'), im = g.createImageData(540, 960);
+      for (let i = 0; i < im.data.length; i += 4) { const v = 128 + (Math.random() + Math.random() + Math.random() - 1.5) * 120; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+      g.putImageData(im, 0, 0); window.GRAIN.push(c.toDataURL('image/png'));
+    }
+    STATE = EPISODE.init(DATA, measure);
+    window.DURATION = DATA.duration;
+    return true;
+  })();
+  window.renderFrame = (t, frameNo) => {
+    document.getElementById('stage').innerHTML = EPISODE.frameSVG(STATE, t, frameNo || 0);
+  };
+  const q = new URLSearchParams(location.search);
+  if (q.get('t')) window.ready.then(() => window.renderFrame(parseFloat(q.get('t')), 0));
+</script>
+</body>
+</html>
